@@ -17,8 +17,10 @@ Tu misión es:
   - En el mismo punto anterior, seria ideal contar una collección de POSTMAN para hacer pruebas o una documentación en Swagger.
   - Endpoints que esperamos:
     - vender un producto de los tipos definidos
+      - Agregas a productos vendidos uno de los productos que tenemos
     - listar los productos que tenemos en venta
-    - listar comportamiento de todos los productos en X cantidad de dias
+      - Muestras la lista de productos vendidos que tenemos actualmente.
+    - listar comportamiento de todos los productos vendidos en X cantidad de dias (simulación) (*)
       - La idea de este endpoint es mostrar como varia cada producto al pasar los dias. (Más adelante se muestran algunos ejemplos)
 - Cada producto tiene distintos comportamientos, las reglas de cada producto se determinan más abajo.
 - No esperamos interfaz grafica, más allá de poder consumir la API por metodos tradicionales. (curl, postman, etc)
@@ -41,8 +43,8 @@ Reglas de productos:
 
 
 ## Notas
-- Para el endpoint de variación de productos, se espera algo similar a:  /evaluateProducts/{days}
-  Donde days, es la cantidad de dias a evaluar y como resultado esperamos algo como:
+- Para el endpoint de variación (simulación) de productos (*), se espera algo similar a:  /evaluateProducts/{days}
+  Donde days, es la cantidad de dias a evaluar y como resultado esperamos algo como, aqui es donde varia el sellIn y price, en función de los dias que se pidan:
 
   ```
     -------- dia 0 --------
