@@ -90,7 +90,7 @@ Reglas de productos:
   - La solución debe ser escalable, en cierto modo, debemos poder agregar nuevos tipos de productos en el futuro.
   - Vamos a leer la historia de los commits, para ver como llegaste a la solución, asi que debes hacer commit a medida que avanzas en el desarrollo, para ello  
     esperamos comentarios de commits, que sean significantes.
-  - Para el desarrollo esperamos que trabajes con Java >= 8 o NodeJS >= 8 y que incluyas un Dockerfile con todas las dependencias para poder ejecutarlo.
+  - Para el desarrollo esperamos que trabajes con NodeJS >= 8 y que incluyas un Dockerfile con todas las dependencias para poder ejecutarlo.
   - Esperamos al menos un 100% de cobertura, del código que desarrolles (no aplica código de frameworks), deberas proveer el comando para ejecutar esta medición.
   - Debes proveer la documentación para utilizar tu API, puede ser un postman collection, swagger u otro.
   - Solo vamos a considerar tu solución, si nos envias tu propio repositorio con la solución propuesta.
