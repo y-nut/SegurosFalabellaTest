@@ -1,0 +1,56 @@
+{
+  "prod0": {
+    "name": "Cobertura",
+    "sellIn": 10,
+    "price": 20,
+    "date_creation": "2019-12-04T22:16:45.480Z"
+  },
+  "prod1": {
+    "name": "Full cobertura",
+    "sellIn": 2,
+    "price": 0,
+    "date_creation": "2019-12-04T22:16:45.480Z"
+  },
+  "prod2": {
+    "name": "Baja cobertura",
+    "sellIn": 5,
+    "price": 7,
+    "date_creation": "2019-12-04T22:16:45.480Z"
+  },
+  "prod3": {
+    "name": "Mega cobertura",
+    "sellIn": 0,
+    "price": 80,
+    "date_creation": "2019-12-04T22:16:45.480Z"
+  },
+  "prod4": {
+    "name": "Mega cobertura",
+    "sellIn": -1,
+    "price": 80,
+    "date_creation": "2019-12-04T22:16:45.480Z"
+  },
+  "prod5": {
+    "name": "Full cobertura super duper",
+    "sellIn": 15,
+    "price": 20,
+    "date_creation": "2019-12-04T22:16:45.480Z"
+  },
+  "prod6": {
+    "name": "Full cobertura super duper",
+    "sellIn": 10,
+    "price": 49,
+    "date_creation": "2019-12-04T22:16:45.480Z"
+  },
+  "prod7": {
+    "name": "Full cobertura super duper",
+    "sellIn": 5,
+    "price": 49,
+    "date_creation": "2019-12-04T22:16:45.480Z"
+  },
+  "prod8": {
+    "name": "Super avance",
+    "sellIn": 3,
+    "price": 6,
+    "date_creation": "2019-12-04T22:16:45.480Z"
+  }
+}

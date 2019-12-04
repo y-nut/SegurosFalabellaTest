@@ -13,7 +13,7 @@ Tu misión es:
 - Construir una API REST, de administrador de venta de productos, orientada a objetos.
   - La persistencia puede ser manejada en archivos de configuración.
   - Por cada producto, puedes manejarlo programaticamente si te es más facil, la orientación a objetos te ayudará a ello.
-  - Debemos poder ser capaces de probar tu API, para ello te recomendamos que utilices un Dockerfile para que podamos levantarlo.
+  - Debemos poder ser capaces de probar tu API, para ello te recomendamos que utilices un Dockerfile para que podamos levantarlo. 
   - En el mismo punto anterior, seria ideal contar una collección de POSTMAN para hacer pruebas o una documentación en Swagger.
   - Endpoints que esperamos:
     - vender un producto de los tipos definidos

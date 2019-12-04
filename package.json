@@ -1,0 +1,27 @@
+{
+  "name": "SegurosFalabellaTest",
+  "version": "1.0.0",
+  "description": "## Test de entrevista.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/y-nut/SegurosFalabellaTest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/y-nut/SegurosFalabellaTest/issues"
+  },
+  "homepage": "https://github.com/y-nut/SegurosFalabellaTest#readme",
+  "dependencies": {
+    "compression": "^1.7.4",
+    "express": "^4.17.1",
+    "helmet": "^3.21.2",
+    "moment": "^2.24.0",
+    "nconf": "^0.10.0"
+  }
+}
