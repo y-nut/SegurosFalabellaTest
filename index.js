@@ -2,9 +2,11 @@ const express = require('express');
 const nconf = require('nconf');
 const helmet = require('helmet');
 const compression = require('compression');
-const moment = require('moment')
+const moment = require('moment');
+const fse = require('fs-extra');
 
 const PORT = process.env.PORT || '3000';
+const confPath = './config.json'
 
 const baseData = [
     {
@@ -61,7 +63,7 @@ app
 
 const initProducts = () => {
 
-    nconf.use('file', { file: './config.json' });
+    nconf.use('file', { file: confPath });
     nconf.load();
 
     const dt = moment().clone()
@@ -117,8 +119,36 @@ app.get('/init', (req,res) => {
 
 })
 
+const getConf = () => {
+    return new Promise((res,rej) => {
+        try {
+            return fse.readFile(confPath, (err,data) => {
+                if (err){
+                    return rej(err)
+                } else {
+                    console.dir(JSON.parse(data.toString()))
+                    return res(JSON.parse(data.toString()))
+                }
+                 
+            })
+        } catch (error) {
+            return rej(error)
+        }
+
+    })
+}
+
 app.get('/CRON_DAILY', (req,res) => {
-    return res.status(200).send('OK').end()
+
+     return getConf()
+     .then(data => {
+        console.dir('data',data)
+     })
+     .catch(er => {
+        return res.status(400).send(er.message).end()
+     })
+
+    
 })
 
 const server = app.listen(PORT || '3000', () => {
