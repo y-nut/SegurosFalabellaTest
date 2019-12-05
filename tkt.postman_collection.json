@@ -59,7 +59,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://192.168.0.106:3000/v1/sell-product?key=prod0",
+					"raw": "http://192.168.0.106:3000/v1/sell-product?key=0e527b3c-b7d3-44aa-8b8c-9b8814050ffd",
 					"protocol": "http",
 					"host": [
 						"192",
@@ -75,7 +75,7 @@
 					"query": [
 						{
 							"key": "key",
-							"value": "prod0"
+							"value": "0e527b3c-b7d3-44aa-8b8c-9b8814050ffd"
 						}
 					]
 				}
