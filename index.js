@@ -6,7 +6,8 @@ const moment = require('moment');
 const fse = require('fs-extra');
 
 const PORT = process.env.PORT || '3000';
-const confPath = './config.json'
+const for_sale_list = './for_sale_list.json';
+const sold_list = './sold.json';
 
 const baseData = [
     {
@@ -63,7 +64,7 @@ app
 
 const setConf = (arr_data, include_creation_data) => {
 
-    nconf.use('file', { file: confPath });
+    nconf.use('file', { file: for_sale_list });
     nconf.load();
 
     const dt = moment().clone()
@@ -115,75 +116,15 @@ const setConf = (arr_data, include_creation_data) => {
 const initProducts = () => {
 
     return setConf(baseData,true)
-/*
-    nconf.use('file', { file: confPath });
-    nconf.load();
-
-    const dt = moment().clone()
-    .set({
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-        milliseconds: 0
-    })
-    const strDate = dt.toISOString();
-
-    for (let i = 0; i < baseData.length; i++) {
-        const prodObj = baseData[i];
-        const prodKey = `prod${i}`;
-
-        nconf.set(`${prodKey}:date_creation`, strDate);
-
-        for (const key in prodObj) {
-            if (prodObj.hasOwnProperty(key)) {
-                const element = prodObj[key];
-                
-                nconf.set(`${prodKey}:${key}`, element);
-            }
-        }
-
-        
-    }
-
-    return new Promise((res,rej) => {
-        try {
-            return  nconf
-            .save( (err) => {
-                if (err) {
-                  return rej(err)
-                } else {
-                    return res()
-                }
-                
-            });
-        } catch (error) {
-            return rej(error)
-        }
-
-    })
-*/
 }
 
-app.get('/v1/init', (req,res) => {
-
-    return initProducts(baseData)
-    .then(() => {
-        res.status(200).send('Products initialized').end()
-    })
-    .catch(err => {
-        res.status(400).send(err.message).end()
-    })
-
-})
-
-const getConf = () => {
+const get_for_sale_list = () => {
     return new Promise((res,rej) => {
         try {
-            return fse.readFile(confPath, (err,data) => {
+            return fse.readFile(for_sale_list, (err,data) => {
                 if (err){
                     return rej(err)
                 } else {
-                    //console.dir(JSON.parse(data.toString()))
                     const _data = JSON.parse(data.toString())
                     return res(_data)
                 }
@@ -207,12 +148,58 @@ const product_rules = (data) => {
                 if (data.hasOwnProperty(key)) {
                     let prodObj = data[key];
                     
-                    const todayVirtual = moment().clone().add({days: 4});
+                    let todayVirtual = moment().clone()
+                    //todayVirtual =  moment().clone().add({days: 4}); //test
                     const moment_creation = moment(prodObj.date_creation).clone()
                     const diffDays = todayVirtual.diff(moment_creation, 'days', false);
                     console.log('diffDays', diffDays)
     
-                    prodObj.sellIn -= diffDays
+                    //todos los productos tienen un valor de sellIn, que indica la cantidad de dias que tenemos para vender ese producto.
+                    prodObj.sellIn -= diffDays;
+
+
+                    switch(prodObj.name){
+                        case 'Full cobertura':
+                            //el producto "Full cobertura" incrementa su precio a medida que pasa el tiempo.
+                            prodObj.price -= diffDays
+                            break;
+                        case 'Mega cobertura':
+                            //el producto "Mega cobertura", nunca vence para vender y nunca disminuye su precio.
+                            //el producto "Mega cobertura" tiene un precio fijo de 180.
+                            prodObj.sellIn += diffDays;
+                            prodObj.price = 180
+                            break;
+                        case 'Full cobertura Super duper':
+                            /**
+                             * el producto "Full cobertura Super duper", tal como el "Full Cobertura", incrementa su precio a medida que se acerca su fecha de vencimiento:
+                                - El precio se incrementa en 2 cuando quedan 10 dias o menos y se incrementa en 3, cuando quedan 5 dias o menos.
+                                - el precio disminuye a 0 cuando se vence el tiempo de venta.
+                             */
+                            if (diffDays <= 10 && diffDays > 5){
+                                prodObj.price -= 2 
+                            } else if (diffDays > 0 && diffDays <= 5){
+                                prodObj.price -= 3
+                            } else if (diffDays < 1){
+                                prodObj.price = 0
+                            }
+                            break;
+                        case 'Super avance':
+                            //El producto "Super avance" dismuniye su precio el doble de rapido que un producto normal
+                            prodObj.sellIn -= 2;
+                            break;
+                        default:
+                            //Al final del dia, el sistema debe disminuir los valores de price y sellIn para cada producto.
+                            //Una vez que la fecha de venta ha pasado, sellIn < 0 , los precios de cada producto, se degradan el doble de rapido.
+                            prodObj.price -= prodObj.sellIn < 0 ? 1 : 2;
+                            
+                            
+                            break;
+                    }
+
+                    //El precio de un producto, nunca es negativo
+                    //el precio de un producto nunca supera los 100.
+                    prodObj.price = prodObj.price < 0 ? 0 : prodObj.price > 100 ? 100 : prodObj.price;
+                    
     
                     const nProdObj = Object.assign({}, prodObj)
                     arr.push(nProdObj)
@@ -230,9 +217,23 @@ const product_rules = (data) => {
 
 }
 
+app.get('/v1/init', (req,res) => {
+
+    return initProducts(baseData)
+    .then(() => {
+        res.status(200).send('Products initialized').end()
+    })
+    .catch(err => {
+        res.status(400).send(err.message).end()
+    })
+
+})
+
+
+
 app.get('/v1/CRON_DAILY', (req,res) => {
 
-     return getConf()
+     return get_for_sale_list()
      .then(data => {
         //console.log('data 1',data)
         return product_rules(data)
@@ -253,9 +254,13 @@ app.get('/v1/CRON_DAILY', (req,res) => {
     
 })
 
+
+
 const server = app.listen(PORT || '3000', () => {
     console.log(`app listening on port ${server.address().port}`);
 })
+
+
 
 
 /**
