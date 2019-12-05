@@ -81,12 +81,6 @@ app
 
 const getNowStr = () => {
     const dt = moment().clone()
-    .set({
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-        milliseconds: 0
-    })
     return dt.toISOString();
 }
 
@@ -295,11 +289,9 @@ app.get('/v1/sell-product', (req, res) => {
     /**
      * vender un producto de los tipos definidos (for_sale_list.json)
      *  - Agregas a productos vendidos uno de los productos que tenemos (sold.json)
-
      */
 
     const prodKey = req.query.key;
-    
 
     if (prodKey){
 
@@ -319,6 +311,12 @@ app.get('/v1/sell-product', (req, res) => {
                         product.sold = true;
                         product.sold_date = getNowStr();
 
+                        const startMoment = moment(product.date_creation).clone();
+                        const endMoment = moment(product.sold_date).clone();
+                        const diffDays = endMoment.diff(startMoment, 'days', false);
+
+                        product.days_between_creation_date_and_selling_date = diffDays
+
                         const updateSaleList = nconf.use('file', { file: for_sale_list });
                         updateSaleList.load();
 
@@ -330,6 +328,25 @@ app.get('/v1/sell-product', (req, res) => {
                             addToSoldList.load();
     
                             addToSoldList.set(prodKey, product);
+
+                            /*
+
+                            I don't understand this instruction?????
+
+                            Puedes crear los productos programaticamente dentro del código, pero debes permitir crear un producto de esos tipos, ej:
+
+                                Tienes el producto Mega cobertura, al momento de vender uno de ese tipo, nuestra lista de productos vendidos agrega uno nuevo.
+                                Vendes el mismo anterior.
+                                Vendes el producto Cobertura, que es un producto normal, se agrega a la lista.
+                                Vendes un super avance y lo mismo.
+                                La lista de productos vendidos, quedaria asi:
+                                    Mega cobertura
+                                    Mega cobertura
+                                    Cobertura
+                                    Super avance
+
+
+                             */
 
                             return saveList(addToSoldList)
 
@@ -373,6 +390,11 @@ app.get('/v1/show-sold-products', (req, res) => {
     /**
      * listar los productos que tenemos en venta
         Muestras la lista de productos vendidos que tenemos actualmente.
+
+        listar comportamiento de todos los productos vendidos en X cantidad de dias (simulación) (*)
+
+    La idea de este endpoint es mostrar como varia cada producto al pasar los dias. (Más adelante se muestran algunos ejemplos)
+
     */
 
     return getList(sold_list)
@@ -383,6 +405,7 @@ app.get('/v1/show-sold-products', (req, res) => {
         return res.status(400).send(er.message).end()
     })
 })
+
 
 
 
