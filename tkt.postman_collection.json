@@ -1,0 +1,110 @@
+{
+	"info": {
+		"_postman_id": "d55a0f19-340b-47db-a086-b3f04b75e7a6",
+		"name": "tkt",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Init",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.0.106:3000/v1/init",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"106"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"init"
+					]
+				},
+				"description": "version 1.\nInitialization of data"
+			},
+			"response": []
+		},
+		{
+			"name": "Daily CRON",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.0.106:3000/v1/CRON_DAILY",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"106"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"CRON_DAILY"
+					]
+				},
+				"description": "daily cron to manipulate data"
+			},
+			"response": []
+		},
+		{
+			"name": "sell product",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.0.106:3000/v1/sell-product?key=prod0",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"106"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"sell-product"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "prod0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List of sold products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.0.106:3000/v1/show-sold-products",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"106"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"show-sold-products"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
