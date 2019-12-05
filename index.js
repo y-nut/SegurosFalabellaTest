@@ -79,11 +79,7 @@ app
 .use(helmet())
 .use(compression())
 
-const setConf = (arr_data, include_creation_data) => {
-
-    nconf.use('file', { file: for_sale_list })
-    nconf.load();
-
+const getNowStr = () => {
     const dt = moment().clone()
     .set({
         hours: 0,
@@ -91,20 +87,28 @@ const setConf = (arr_data, include_creation_data) => {
         seconds: 0,
         milliseconds: 0
     })
-    const strDate = dt.toISOString();
+    return dt.toISOString();
+}
+
+const setConf = (arr_data, include_creation_data) => {
+
+    nconf.use('file', { file: for_sale_list })
+    nconf.load();
+/*
+    const dt = moment().clone()
+    .set({
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0
+    })
+    */
+    const strDate = getNowStr(); // dt.toISOString();
 
     for (let i = 0; i < arr_data.length; i++) {
         let prodObj = arr_data[i];
         const prodKey = `prod${i}`;
 
-        if (!prodObj.hasOwnProperty('sold')){
-            nconf.set(`${prodKey}:sold`, false);
-        }
-/*
-        if (!prodObj.hasOwnProperty('key')){
-            nconf.set(`${prodKey}:key`, false);
-        }
-*/
         if (include_creation_data){
             nconf.set(`${prodKey}:date_creation`, strDate);
         }
@@ -118,24 +122,9 @@ const setConf = (arr_data, include_creation_data) => {
 
         
     }
-/*
-    return new Promise((res,rej) => {
-        try {
-            return  nconf
-            .save( (err) => {
-                if (err) {
-                  return rej(err)
-                } else {
-                    return res()
-                }
-                
-            });
-        } catch (error) {
-            return rej(error)
-        }
 
-    })
-*/
+    return saveList(nconf)
+
 }
 
 const saveList = (nconf) => {
@@ -191,62 +180,66 @@ const product_rules = (data) => {
             for (const key in data) {
                 if (data.hasOwnProperty(key)) {
                     let prodObj = data[key];
+
+                    if (!prodObj.sold){
                     
-                    let todayVirtual = moment().clone()
-                    //todayVirtual =  moment().clone().add({days: 4}); //test
-                    const moment_creation = moment(prodObj.date_creation).clone()
-                    const diffDays = todayVirtual.diff(moment_creation, 'days', false);
-                    console.log('diffDays', diffDays)
+                        let todayVirtual = moment().clone()
+                        //todayVirtual =  moment().clone().add({days: 4}); //test
+                        const moment_creation = moment(prodObj.date_creation).clone()
+                        const diffDays = todayVirtual.diff(moment_creation, 'days', false);
+                        console.log('diffDays', diffDays)
+        
+                        //todos los productos tienen un valor de sellIn, que indica la cantidad de dias que tenemos para vender ese producto.
+                        prodObj.sellIn -= diffDays;
     
-                    //todos los productos tienen un valor de sellIn, que indica la cantidad de dias que tenemos para vender ese producto.
-                    prodObj.sellIn -= diffDays;
-
-
-                    switch(prodObj.name){
-                        case 'Full cobertura':
-                            //el producto "Full cobertura" incrementa su precio a medida que pasa el tiempo.
-                            prodObj.price -= diffDays
-                            break;
-                        case 'Mega cobertura':
-                            //el producto "Mega cobertura", nunca vence para vender y nunca disminuye su precio.
-                            //el producto "Mega cobertura" tiene un precio fijo de 180.
-                            prodObj.sellIn += diffDays;
-                            prodObj.price = 180
-                            break;
-                        case 'Full cobertura Super duper':
-                            /**
-                             * el producto "Full cobertura Super duper", tal como el "Full Cobertura", incrementa su precio a medida que se acerca su fecha de vencimiento:
-                                - El precio se incrementa en 2 cuando quedan 10 dias o menos y se incrementa en 3, cuando quedan 5 dias o menos.
-                                - el precio disminuye a 0 cuando se vence el tiempo de venta.
-                             */
-                            if (diffDays <= 10 && diffDays > 5){
-                                prodObj.price -= 2 
-                            } else if (diffDays > 0 && diffDays <= 5){
-                                prodObj.price -= 3
-                            } else if (diffDays < 1){
-                                prodObj.price = 0
-                            }
-                            break;
-                        case 'Super avance':
-                            //El producto "Super avance" dismuniye su precio el doble de rapido que un producto normal
-                            prodObj.sellIn -= 2;
-                            break;
-                        default:
-                            //Al final del dia, el sistema debe disminuir los valores de price y sellIn para cada producto.
-                            //Una vez que la fecha de venta ha pasado, sellIn < 0 , los precios de cada producto, se degradan el doble de rapido.
-                            prodObj.price -= prodObj.sellIn < 0 ? 1 : 2;
-                            
-                            
-                            break;
+    
+                        switch(prodObj.name){
+                            case 'Full cobertura':
+                                //el producto "Full cobertura" incrementa su precio a medida que pasa el tiempo.
+                                prodObj.price -= diffDays
+                                break;
+                            case 'Mega cobertura':
+                                //el producto "Mega cobertura", nunca vence para vender y nunca disminuye su precio.
+                                //el producto "Mega cobertura" tiene un precio fijo de 180.
+                                prodObj.sellIn += diffDays;
+                                prodObj.price = 180
+                                break;
+                            case 'Full cobertura Super duper':
+                                /**
+                                 * el producto "Full cobertura Super duper", tal como el "Full Cobertura", incrementa su precio a medida que se acerca su fecha de vencimiento:
+                                    - El precio se incrementa en 2 cuando quedan 10 dias o menos y se incrementa en 3, cuando quedan 5 dias o menos.
+                                    - el precio disminuye a 0 cuando se vence el tiempo de venta.
+                                 */
+                                if (diffDays <= 10 && diffDays > 5){
+                                    prodObj.price -= 2 
+                                } else if (diffDays > 0 && diffDays <= 5){
+                                    prodObj.price -= 3
+                                } else if (diffDays < 1){
+                                    prodObj.price = 0
+                                }
+                                break;
+                            case 'Super avance':
+                                //El producto "Super avance" dismuniye su precio el doble de rapido que un producto normal
+                                prodObj.sellIn -= 2;
+                                break;
+                            default:
+                                //Al final del dia, el sistema debe disminuir los valores de price y sellIn para cada producto.
+                                //Una vez que la fecha de venta ha pasado, sellIn < 0 , los precios de cada producto, se degradan el doble de rapido.
+                                prodObj.price -= prodObj.sellIn < 0 ? 1 : 2;
+                                
+                                
+                                break;
+                        }
+    
+                        //El precio de un producto, nunca es negativo
+                        //el precio de un producto nunca supera los 100.
+                        prodObj.price = prodObj.price < 0 ? 0 : prodObj.price > 100 ? 100 : prodObj.price;
+                        
+        
+                        const nProdObj = Object.assign({}, prodObj)
+                        arr.push(nProdObj)    
                     }
-
-                    //El precio de un producto, nunca es negativo
-                    //el precio de un producto nunca supera los 100.
-                    prodObj.price = prodObj.price < 0 ? 0 : prodObj.price > 100 ? 100 : prodObj.price;
                     
-    
-                    const nProdObj = Object.assign({}, prodObj)
-                    arr.push(nProdObj)
                 }
             }
     
@@ -319,14 +312,17 @@ app.get('/v1/sell-product', (req, res) => {
                 if (product.sold){
                     return res.status(400).send('product is sold!').end()
                 } else {
-                    //return res.status(200).send(product).end()
-                    product.sold = true;
+                    
+                    
                     try {
+                        
+                        product.sold = true;
+                        product.sold_date = getNowStr();
 
                         const updateSaleList = nconf.use('file', { file: for_sale_list });
                         updateSaleList.load();
 
-                        updateSaleList.set(`${prodKey}:sold`, true);
+                        updateSaleList.set(`${prodKey}`, product);
 
                         return saveList(updateSaleList)
                         .then(() => {
@@ -371,6 +367,21 @@ app.get('/v1/sell-product', (req, res) => {
         return res.status(400).send('No product defined!').end()
     }
 
+})
+
+app.get('/v1/show-sold-products', (req, res) => {
+    /**
+     * listar los productos que tenemos en venta
+        Muestras la lista de productos vendidos que tenemos actualmente.
+    */
+
+    return getList(sold_list)
+    .then(data => {
+        return res.status(200).send(data).end()
+    })
+    .catch(er => {
+        return res.status(400).send(er.message).end()
+    })
 })
 
 

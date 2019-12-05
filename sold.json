@@ -1,7 +1,6 @@
 {
   "prod0": {
     "sold": true,
-    "key": false,
     "date_creation": "2019-12-04T03:00:00.000Z",
     "name": "Cobertura",
     "sellIn": 10,

@@ -1,7 +1,6 @@
 {
   "prod0": {
     "sold": true,
-    "key": false,
     "date_creation": "2019-12-04T03:00:00.000Z",
     "name": "Cobertura",
     "sellIn": 10,
@@ -9,7 +8,6 @@
   },
   "prod1": {
     "sold": false,
-    "key": false,
     "date_creation": "2019-12-04T03:00:00.000Z",
     "name": "Full cobertura",
     "sellIn": 2,
@@ -17,7 +15,6 @@
   },
   "prod2": {
     "sold": false,
-    "key": false,
     "date_creation": "2019-12-04T03:00:00.000Z",
     "name": "Baja cobertura",
     "sellIn": 5,
@@ -25,7 +22,6 @@
   },
   "prod3": {
     "sold": false,
-    "key": false,
     "date_creation": "2019-12-04T03:00:00.000Z",
     "name": "Mega cobertura",
     "sellIn": 0,
@@ -33,7 +29,6 @@
   },
   "prod4": {
     "sold": false,
-    "key": false,
     "date_creation": "2019-12-04T03:00:00.000Z",
     "name": "Mega cobertura",
     "sellIn": -1,
@@ -41,7 +36,6 @@
   },
   "prod5": {
     "sold": false,
-    "key": false,
     "date_creation": "2019-12-04T03:00:00.000Z",
     "name": "Full cobertura super duper",
     "sellIn": 15,
@@ -49,7 +43,6 @@
   },
   "prod6": {
     "sold": false,
-    "key": false,
     "date_creation": "2019-12-04T03:00:00.000Z",
     "name": "Full cobertura super duper",
     "sellIn": 10,
@@ -57,7 +50,6 @@
   },
   "prod7": {
     "sold": false,
-    "key": false,
     "date_creation": "2019-12-04T03:00:00.000Z",
     "name": "Full cobertura super duper",
     "sellIn": 5,
@@ -65,7 +57,6 @@
   },
   "prod8": {
     "sold": false,
-    "key": false,
     "date_creation": "2019-12-04T03:00:00.000Z",
     "name": "Super avance",
     "sellIn": 3,
