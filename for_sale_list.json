@@ -1,59 +1,65 @@
 {
-  "prod0": {
-    "date_creation": "2019-12-05T01:06:49.038Z",
+  "4d03c2c0-39a6-4023-8ff5-d1b318060393": {
+    "date_creation": "2019-12-05T14:01:04.975Z",
     "name": "Cobertura",
     "sellIn": 10,
-    "price": 20,
-    "sold": true,
-    "sold_date": "2019-12-05T01:06:59.663Z",
-    "days_between_creation_date_and_selling_date": 0
+    "price": 20
   },
-  "prod1": {
-    "date_creation": "2019-12-05T01:06:49.038Z",
+  "ecb0e74f-8591-49ce-8f55-8650f715e98d": {
+    "date_creation": "2019-12-05T14:01:04.975Z",
     "name": "Full cobertura",
     "sellIn": 2,
     "price": 0
   },
-  "prod2": {
-    "date_creation": "2019-12-05T01:06:49.038Z",
+  "cf1d6eea-61f6-4123-b3c7-3316a5044fd5": {
+    "date_creation": "2019-12-05T14:01:04.975Z",
     "name": "Baja cobertura",
     "sellIn": 5,
     "price": 7
   },
-  "prod3": {
-    "date_creation": "2019-12-05T01:06:49.038Z",
+  "0e527b3c-b7d3-44aa-8b8c-9b8814050ffd": {
+    "date_creation": "2019-12-05T14:01:04.975Z",
     "name": "Mega cobertura",
     "sellIn": 0,
-    "price": 80
+    "price": 80,
+    "sold": true,
+    "sold_date": "2019-12-05T14:01:38.141Z",
+    "days_between_creation_date_and_selling_date": 0
   },
-  "prod4": {
-    "date_creation": "2019-12-05T01:06:49.038Z",
+  "b5b30fac-f2cb-4081-91ef-e8852401609a": {
+    "date_creation": "2019-12-05T14:01:04.975Z",
     "name": "Mega cobertura",
     "sellIn": -1,
     "price": 80
   },
-  "prod5": {
-    "date_creation": "2019-12-05T01:06:49.038Z",
+  "f4feab5b-d292-4fb7-a6fe-655fe4d74f0c": {
+    "date_creation": "2019-12-05T14:01:04.975Z",
     "name": "Full cobertura super duper",
     "sellIn": 15,
     "price": 20
   },
-  "prod6": {
-    "date_creation": "2019-12-05T01:06:49.038Z",
+  "91056ab2-e00a-481e-8838-9dc70619adbf": {
+    "date_creation": "2019-12-05T14:01:04.975Z",
     "name": "Full cobertura super duper",
     "sellIn": 10,
     "price": 49
   },
-  "prod7": {
-    "date_creation": "2019-12-05T01:06:49.038Z",
+  "34d8003f-17d3-442a-b532-c26e15fb6fe1": {
+    "date_creation": "2019-12-05T14:01:04.975Z",
     "name": "Full cobertura super duper",
     "sellIn": 5,
     "price": 49
   },
-  "prod8": {
-    "date_creation": "2019-12-05T01:06:49.038Z",
+  "24f4cf8c-7e17-4ac9-b469-9ffeb144058b": {
+    "date_creation": "2019-12-05T14:01:04.975Z",
     "name": "Super avance",
     "sellIn": 3,
     "price": 6
+  },
+  "b432056e-89e5-41c2-a5c8-93de636ab2dd": {
+    "date_creation": "2019-12-05T14:01:38.146Z",
+    "name": "Mega cobertura",
+    "sellIn": 15,
+    "price": 80
   }
 }

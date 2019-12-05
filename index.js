@@ -21,6 +21,7 @@ const helmet = require('helmet');
 const compression = require('compression');
 const moment = require('moment');
 const fse = require('fs-extra');
+const UUID = require('uuid/v4');
 
 const PORT = process.env.PORT || '3000';
 const for_sale_list = './for_sale_list.json';
@@ -101,7 +102,7 @@ const setConf = (arr_data, include_creation_data) => {
 
     for (let i = 0; i < arr_data.length; i++) {
         let prodObj = arr_data[i];
-        const prodKey = `prod${i}`;
+        const prodKey = UUID() //`prod${i}`;
 
         if (include_creation_data){
             nconf.set(`${prodKey}:date_creation`, strDate);
@@ -322,6 +323,19 @@ app.get('/v1/sell-product', (req, res) => {
 
                         updateSaleList.set(`${prodKey}`, product);
 
+                        if (product.name === 'Mega cobertura'){
+                            //Tienes el producto Mega cobertura, al momento de vender uno de ese tipo, nuestra lista de productos vendidos agrega uno nuevo.
+                            const newProduct = {
+                                "date_creation": getNowStr(),
+                                "name": "Mega cobertura",
+                                "sellIn": 15,
+                                "price": 80
+                              }
+                            const newID = UUID();
+
+                            updateSaleList.set(`${newID}`, newProduct);
+                        }
+
                         return saveList(updateSaleList)
                         .then(() => {
                             const addToSoldList = nconf.use('file', { file: sold_list });
@@ -335,7 +349,7 @@ app.get('/v1/sell-product', (req, res) => {
 
                             Puedes crear los productos programaticamente dentro del código, pero debes permitir crear un producto de esos tipos, ej:
 
-                                Tienes el producto Mega cobertura, al momento de vender uno de ese tipo, nuestra lista de productos vendidos agrega uno nuevo.
+                                
                                 Vendes el mismo anterior.
                                 Vendes el producto Cobertura, que es un producto normal, se agrega a la lista.
                                 Vendes un super avance y lo mismo.

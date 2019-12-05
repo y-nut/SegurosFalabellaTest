@@ -1,11 +1,11 @@
 {
-  "prod0": {
-    "date_creation": "2019-12-05T01:06:49.038Z",
-    "name": "Cobertura",
-    "sellIn": 10,
-    "price": 20,
+  "0e527b3c-b7d3-44aa-8b8c-9b8814050ffd": {
+    "date_creation": "2019-12-05T14:01:04.975Z",
+    "name": "Mega cobertura",
+    "sellIn": 0,
+    "price": 80,
     "sold": true,
-    "sold_date": "2019-12-05T01:06:59.663Z",
+    "sold_date": "2019-12-05T14:01:38.141Z",
     "days_between_creation_date_and_selling_date": 0
   }
 }
