@@ -1,3 +1,20 @@
+/**
+ * ########## APP INSTRUCTIONS ###########
+ * The app below is created based on the README file in the root of this project.
+ * It consists of a product list of fictive insurances with various information, such as
+ * name, price, sellIn and creation date. The SellIn attribute indicates how many days
+ * a product has been for sale. 
+ * 
+ * The SellIn value is dynamically adjusted as the days go by with a CRON named "/v1/CRON_DAILY".
+ * This CRON function should be executed every 24 hours. For instance at 23.59 all days.
+ * 
+ * The price list is initialized the first day with the endpoint "/v1/init"
+ * 
+ * The remaining endpoints and functions have their own description based on the README. 
+ * Please see through code.
+ * 
+ */
+
 const express = require('express');
 const nconf = require('nconf');
 const helmet = require('helmet');
@@ -64,7 +81,7 @@ app
 
 const setConf = (arr_data, include_creation_data) => {
 
-    nconf.use('file', { file: for_sale_list });
+    nconf.use('file', { file: for_sale_list })
     nconf.load();
 
     const dt = moment().clone()
@@ -77,9 +94,17 @@ const setConf = (arr_data, include_creation_data) => {
     const strDate = dt.toISOString();
 
     for (let i = 0; i < arr_data.length; i++) {
-        const prodObj = arr_data[i];
+        let prodObj = arr_data[i];
         const prodKey = `prod${i}`;
 
+        if (!prodObj.hasOwnProperty('sold')){
+            nconf.set(`${prodKey}:sold`, false);
+        }
+/*
+        if (!prodObj.hasOwnProperty('key')){
+            nconf.set(`${prodKey}:key`, false);
+        }
+*/
         if (include_creation_data){
             nconf.set(`${prodKey}:date_creation`, strDate);
         }
@@ -93,7 +118,7 @@ const setConf = (arr_data, include_creation_data) => {
 
         
     }
-
+/*
     return new Promise((res,rej) => {
         try {
             return  nconf
@@ -110,7 +135,26 @@ const setConf = (arr_data, include_creation_data) => {
         }
 
     })
+*/
+}
 
+const saveList = (nconf) => {
+    return new Promise((res,rej) => {
+        try {
+            return  nconf
+            .save( (err) => {
+                if (err) {
+                  return rej(err)
+                } else {
+                    return res()
+                }
+                
+            });
+        } catch (error) {
+            return rej(error)
+        }
+
+    })
 }
 
 const initProducts = () => {
@@ -118,10 +162,10 @@ const initProducts = () => {
     return setConf(baseData,true)
 }
 
-const get_for_sale_list = () => {
+const getList = (listName) => {
     return new Promise((res,rej) => {
         try {
-            return fse.readFile(for_sale_list, (err,data) => {
+            return fse.readFile(listName, (err,data) => {
                 if (err){
                     return rej(err)
                 } else {
@@ -229,11 +273,9 @@ app.get('/v1/init', (req,res) => {
 
 })
 
-
-
 app.get('/v1/CRON_DAILY', (req,res) => {
 
-     return get_for_sale_list()
+     return getList(for_sale_list)
      .then(data => {
         //console.log('data 1',data)
         return product_rules(data)
@@ -252,6 +294,83 @@ app.get('/v1/CRON_DAILY', (req,res) => {
      })
 
     
+})
+
+
+app.get('/v1/sell-product', (req, res) => {
+
+    /**
+     * vender un producto de los tipos definidos (for_sale_list.json)
+     *  - Agregas a productos vendidos uno de los productos que tenemos (sold.json)
+
+     */
+
+    const prodKey = req.query.key;
+    
+
+    if (prodKey){
+
+        return getList(for_sale_list)
+        .then(products => {
+            
+            if (products && products[prodKey]){
+                let product = products[prodKey];
+
+                if (product.sold){
+                    return res.status(400).send('product is sold!').end()
+                } else {
+                    //return res.status(200).send(product).end()
+                    product.sold = true;
+                    try {
+
+                        const updateSaleList = nconf.use('file', { file: for_sale_list });
+                        updateSaleList.load();
+
+                        updateSaleList.set(`${prodKey}:sold`, true);
+
+                        return saveList(updateSaleList)
+                        .then(() => {
+                            const addToSoldList = nconf.use('file', { file: sold_list });
+                            addToSoldList.load();
+    
+                            addToSoldList.set(prodKey, product);
+
+                            return saveList(addToSoldList)
+
+                        })
+                        .then(() => {
+                            return res.status(200).json({
+                                result: 'You bought the product',
+                                product: product
+                            })
+                        })
+                        .catch(er => {
+                            return res.status(400).send('An error happened').end()
+                        })
+
+                        
+                    } catch (error) {
+                        return res.status(400).send('Could not update list!').end()
+                    }
+
+                }
+
+    
+
+            } else {
+                return res.status(400).send('No products!').end()
+            }
+            
+        })
+        .catch(er => {
+            return res.status(400).send(er.message).end()
+        })
+
+
+    } else {
+        return res.status(400).send('No product defined!').end()
+    }
+
 })
 
 
